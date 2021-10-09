@@ -6,6 +6,133 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<script>
+		const mint = async function() {
+			if (typeof window.ethereum === 'undefined') {
+				return;
+			} else {
+				console.log(window.ethereum);
+			}
+
+
+			// Will Start the metamask extension
+			await ethereum.request({ method: 'eth_requestAccounts' });
+
+		 const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+		 console.log(accounts);
+
+		 console.log("chainId: ", window.ethereum.chainId);
+		 console.log("isMetaMask: ", window.ethereum.isMetaMask);
+
+		 // TODO: use BigNumber
+		 var value = "0x8e1bc9bf040000";
+		 var data = "0xa0712d680000000000000000000000000000000000000000000000000000000000000002"
+
+			var params = [
+			  {
+			    from: accounts[0],
+			    to: '0x383af52af00ede7f5a2c55bbd254c55f079856e5',
+					value: value,
+			    data: data,	// mint()
+			  },
+			];
+
+			await ethereum
+			  .request({
+			    method: 'eth_sendTransaction',
+			    params,
+			  })
+			  .then((result) => {
+			    // The result varies by RPC method.
+			    // For example, this method will return a transaction hash hexadecimal string on success.
+				 console.log(result);
+			  })
+			  .catch((error) => {
+			    // If the request fails, the Promise will reject with an error.
+			  });
+		}
+
+		const merge = async function(a, b) {
+			if (typeof window.ethereum === 'undefined') {
+				return;
+			} else {
+				console.log(window.ethereum);
+			}
+
+
+			// Will Start the metamask extension
+			await ethereum.request({ method: 'eth_requestAccounts' });
+
+		 const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+		 console.log(accounts);
+
+		 console.log("chainId: ", window.ethereum.chainId);
+		 console.log("isMetaMask: ", window.ethereum.isMetaMask);
+
+			var params = [
+			  {
+			    from: accounts[0],
+			    to: '0x383af52af00ede7f5a2c55bbd254c55f079856e5',
+			    data: '0x0236d83a',	// fullMerge
+			  },
+			];
+
+			await ethereum
+			  .request({
+			    method: 'eth_sendTransaction',
+			    params,
+			  })
+			  .then((result) => {
+			    // The result varies by RPC method.
+			    // For example, this method will return a transaction hash hexadecimal string on success.
+					console.log(result);
+			  })
+			  .catch((error) => {
+			    // If the request fails, the Promise will reject with an error.
+			  });
+		}
+
+		const claim = async function(a, b) {
+			if (typeof window.ethereum === 'undefined') {
+				return;
+			} else {
+				console.log(window.ethereum);
+			}
+
+
+			// Will Start the metamask extension
+			await ethereum.request({ method: 'eth_requestAccounts' });
+
+		 const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+		 console.log(accounts);
+
+		 console.log("chainId: ", window.ethereum.chainId);
+		 console.log("isMetaMask: ", window.ethereum.isMetaMask);
+
+			var params = [
+				{
+					from: accounts[0],
+					to: '0x383af52af00ede7f5a2c55bbd254c55f079856e5',
+					data: '0x4e71d92d',	// claim
+				},
+			];
+
+			await ethereum
+				.request({
+					method: 'eth_sendTransaction',
+					params,
+				})
+				.then((result) => {
+					// The result varies by RPC method.
+					// For example, this method will return a transaction hash hexadecimal string on success.
+					console.log(result);
+				})
+				.catch((error) => {
+					// If the request fails, the Promise will reject with an error.
+				});
+		}
+
+		</script>
 	</head>
 	<body class="is-preload">
 
@@ -26,6 +153,7 @@
 						</div>
 						<nav>
 							<ul>
+								<li><a href="#app">APP</a></li>
 								<li><a href="#nft">NFT</a></li>
 								<li><a href="#token">Token</a></li>
 								<li><a href="#roadmap">Roadmap</a></li>
@@ -130,6 +258,40 @@
 										<li>More exchanges for Token 2048</li>
 									</ul>
 							</article>
+
+						<!-- Contact -->
+							<article id="app">
+								<h2 class="major">App</h2>
+								<hr>
+								<h3>Mint</h3>
+								<label>Mint some tiles</label>
+								<form onsubmit="return mint();">
+									<div class="fields">
+										<div class="field half">
+											<label for="amount">Amount To Mint (Per tile 0.02 ETH): </label>
+											<input type="number" name="amount" id="amount" min="2" max="2" value="2"/>
+										</div>
+									</div>
+									<ul class="actions">
+										<li><input type="submit" value="Mint" class="primary" /></li>
+									</ul>
+								</form>
+
+								<hr>
+								<h3>Merge</h3>
+								<label>Merge all your tiles to next</label>
+								<ul class="actions">
+									<li><a href="#" class="button" onclick="return merge();">Merge</a></li>
+								</ul>
+
+								<hr>
+								<h3>Claim</h3>
+								<label>Burn your Tile-2048 to claim 2048 token</label>
+								<ul class="actions">
+									<li><a href="#app" class="button" onclick="return claim();">Claim</a></li>
+								</ul>
+							</article>
+
 					</div>
 
 				<!-- Footer -->

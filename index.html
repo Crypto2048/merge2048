@@ -1,8 +1,9 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-		<title>Crypto 2048</title>
+		<title>Merge 2048</title>
 		<meta charset="utf-8" />
+		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">  
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
@@ -14,9 +15,39 @@
 				console.log(window.ethereum);
 			}
 
+			if (window.ethereum.chainId != "0x89") {
+                try {
+                    await ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: '0x89' }],
+                    });
+                } catch (switchError) {
+                    console.log("switchError: ", switchError)
+                    // This error code indicates that the chain has not been added to MetaMask.
+                    if (switchError.code === 4902) {
+                        console.log("4902");
+                        try {
+                        await ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [{
+                                chainId: '0x89', 
+                                rpcUrls: ['https://polygon-rpc.com/'],
+                                chainName: 'Polygon Mainnet',
+                                blockExplorerUrls: ['https://polygonscan.com/']}],
+                        });
+                        } catch (addError) {
+                            // handle "add" error
+                            return;
+                        }
+                    }
+                    // handle other "switch" errors
+                    return;
+                }
+            }
 
-			// Will Start the metamask extension
-			await ethereum.request({ method: 'eth_requestAccounts' });
+
+		// Will Start the metamask extension
+		await ethereum.request({ method: 'eth_requestAccounts' });
 
 		 const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
 		 console.log(accounts);
@@ -24,16 +55,11 @@
 		 console.log("chainId: ", window.ethereum.chainId);
 		 console.log("isMetaMask: ", window.ethereum.isMetaMask);
 
-		 // TODO: use BigNumber
-		 var value = "0x8e1bc9bf040000";
-		 var data = "0xa0712d680000000000000000000000000000000000000000000000000000000000000002"
-
 			var params = [
 			  {
 			    from: accounts[0],
-			    to: '0x383af52af00ede7f5a2c55bbd254c55f079856e5',
-					value: value,
-			    data: data,	// mint()
+			    to: '0x2048c74851f2ed5c45dB70CCb7898A73CFEDE11e',
+			    data: "0x1249c58b",	// mint()
 			  },
 			];
 
@@ -52,86 +78,6 @@
 			  });
 		}
 
-		const merge = async function(a, b) {
-			if (typeof window.ethereum === 'undefined') {
-				return;
-			} else {
-				console.log(window.ethereum);
-			}
-
-
-			// Will Start the metamask extension
-			await ethereum.request({ method: 'eth_requestAccounts' });
-
-		 const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-		 console.log(accounts);
-
-		 console.log("chainId: ", window.ethereum.chainId);
-		 console.log("isMetaMask: ", window.ethereum.isMetaMask);
-
-			var params = [
-			  {
-			    from: accounts[0],
-			    to: '0x383af52af00ede7f5a2c55bbd254c55f079856e5',
-			    data: '0x0236d83a',	// fullMerge
-			  },
-			];
-
-			await ethereum
-			  .request({
-			    method: 'eth_sendTransaction',
-			    params,
-			  })
-			  .then((result) => {
-			    // The result varies by RPC method.
-			    // For example, this method will return a transaction hash hexadecimal string on success.
-					console.log(result);
-			  })
-			  .catch((error) => {
-			    // If the request fails, the Promise will reject with an error.
-			  });
-		}
-
-		const claim = async function(a, b) {
-			if (typeof window.ethereum === 'undefined') {
-				return;
-			} else {
-				console.log(window.ethereum);
-			}
-
-
-			// Will Start the metamask extension
-			await ethereum.request({ method: 'eth_requestAccounts' });
-
-		 const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-		 console.log(accounts);
-
-		 console.log("chainId: ", window.ethereum.chainId);
-		 console.log("isMetaMask: ", window.ethereum.isMetaMask);
-
-			var params = [
-				{
-					from: accounts[0],
-					to: '0x383af52af00ede7f5a2c55bbd254c55f079856e5',
-					data: '0x4e71d92d',	// claim
-				},
-			];
-
-			await ethereum
-				.request({
-					method: 'eth_sendTransaction',
-					params,
-				})
-				.then((result) => {
-					// The result varies by RPC method.
-					// For example, this method will return a transaction hash hexadecimal string on success.
-					console.log(result);
-				})
-				.catch((error) => {
-					// If the request fails, the Promise will reject with an error.
-				});
-		}
-
 		</script>
 	</head>
 	<body class="is-preload">
@@ -146,151 +92,21 @@
 						</div>
 						<div class="content">
 							<div class="inner">
-								<h1>Crypto 2048</h1>
-								<p>Crypto2048 is the on-chain version of 2048. <br />All tiles and images are store on the blockchain of Ethereum.<br />
-								Crypto2048 consists of two important parts,<br /> an <a href="https://opensea.io/collection/crypto-2048" target="_blank">ERC1155-compliant NFT</a> and an ERC20-compliant Token.</p>
+								<h1>Merge 2048</h1>
+								<p>Merge2048 is an ERC-1155, but anyone cannot have two with the same token id at the same time.</p>
 							</div>
 						</div>
 						<nav>
 							<ul>
-								<li><a href="#app">APP</a></li>
-								<li><a href="#nft">NFT</a></li>
-								<li><a href="#token">Token</a></li>
-								<li><a href="#roadmap">Roadmap</a></li>
-								<li><a href="https://opensea.io/collection/crypto-2048"  target="_blank">OpenSea</a></li>
-								<li><a href="https://v2.info.uniswap.org/pair/0x78babf7bb385f87468b8c339bdbe7b0ad2563a1f"  target="_blank">Uniswap</a></li>
+								<li><a href="https://crypto2048.org/">Home</a></li>
+								<li><a href="javascript:mint();">Mint</a></li>
+								<li><a href="https://opensea.io/collection/merge2048"  target="_blank">OpenSea</a></li>
 							</ul>
 						</nav>
 					</header>
 
 				<!-- Main -->
 					<div id="main">
-
-						<!-- 2048 NFT -->
-							<article id="nft">
-								<h2 class="major">Crypto2048 NFT</h2>
-								<span class="image main"><img src="images/2048.png" alt="" /></span>
-								<p>Crypto2048 NFT is a number of columns of NFT in compliance with ERC1155 standard, it contains 11 tiles, i.e. 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024 and 2048.</p>
-								<p>All tile images are stored in SVG format on the chain.</p>
-								<p>The colors of all tile images, including the number colors and the background colors, are used from <a href="https://play2048.co/"  target="_blank">Game 2048</a>. Thanks to <a href="https://twitter.com/gabrielecirulli"  target="_blank">Gabriele Cirulli</a>, the creator of 2048.</p>
-								<p>The total supply of Crypto2048 NFT is 8888, but it's not just 8888.</p>
-								<p>Anyone can pay 0.02 ETH to mint a tile, and the tiles will be randomly mint according to a certain probability. The probabilities are as follows:</p>
-								<table>
-									<thead>
-									  <tr>
-										<th>Tile</th>
-										<th>Probability</th>
-									  </tr>
-									</thead>
-									<tbody>
-										  <tr>
-											<td>2048</td>
-											<td>4 / 8888</td>
-										  </tr>
-										  <tr>
-											<td>1024</td>
-											<td>8 / 8888</td>
-										  </tr>
-										  <tr>
-											<td>512</td>
-											<td>16 / 8888</td>
-										  </tr>
-										  <tr>
-											<td>256</td>
-											<td>32 / 8888</td>
-										  </tr>
-										  <tr>
-											<td>128</td>
-											<td>32 / 8888</td>
-										  </tr>
-										  <tr>
-											<td>64</td>
-											<td>64 / 8888</td>
-										  </tr>
-										  <tr>
-											<td>32</td>
-											<td>256 / 8888</td>
-										  </tr>
-										  <tr>
-											<td>16</td>
-											<td>512 / 8888</td>
-										  </tr>
-										  <tr>
-											<td>8</td>
-											<td>1024 / 8888</td>
-										  </tr>
-										  <tr>
-											<td>4</td>
-											<td>2048 / 8888</td>
-										  </tr>
-										  <tr>
-											<td>2</td>
-											<td>(4096 + 700) / 8888</td>
-										  </tr>
-									  </tbody>
-								</table>
-								<em>Tip: 4096 + 2048 + 1024 + 512 + 256 + 128 + 64 + 32 + 16 + 8 + 4 = 8188, but I like 8888.</em><p></p>
-								<p>If you have two identical tiles, you can choose to merge them.</p>
-								<p>If you have the tile of 2048, you can choose to burn it to claim some ERC20 token.</p>
-								<p>Happy merging!</p>
-							</article>
-
-						<!-- Token -->
-							<article id="token">
-								<h2 class="major">Crypto2048 NFT</h2>
-								<span class="image main"><img src="images/2048.png" alt="" /></span>
-								<p>Crypto2048 Token is a governance token in the Crypto2048 ecosystem and can only be mint by burn Tile-2048.</p>
-								<p>There is no cap, but there is a release rate.</p>
-								<p>Only one Tile-2048 is allowed to be burned per 8 block heights.</p>
-							</article>
-
-						<!-- Roadmap -->
-							<article id="roadmap">
-								<h2 class="major">Roadmap</h2>
-								<ul class="alt">
-										<li><i class="far fa-check-square"></i> Crypto2048 Token and NFT relase</li>
-										<li>10 ETH airdrop to the top 10 address to burn Tile-2048</li>
-										<li>10 ETH add to the Liquidity pool</li>
-										<li>5 ETH to [Gabriele Cirulli](https://twitter.com/gabrielecirulli), the creator of 2048</li>
-										<li>The 2048 DAO</li>
-										<li>The 2048 series games base one NFT 2048 , for burn the 2048 token</li>
-										<li>The web development</li>
-										<li>More exchanges for Token 2048</li>
-									</ul>
-							</article>
-
-						<!-- Contact -->
-							<article id="app">
-								<h2 class="major">App</h2>
-								<hr>
-								<h3>Mint</h3>
-								<label>Mint some tiles</label>
-								<form onsubmit="return mint();">
-									<div class="fields">
-										<div class="field half">
-											<label for="amount">Amount To Mint (Per tile 0.02 ETH): </label>
-											<input type="number" name="amount" id="amount" min="2" max="2" value="2"/>
-										</div>
-									</div>
-									<ul class="actions">
-										<li><input type="submit" value="Mint" class="primary" /></li>
-									</ul>
-								</form>
-
-								<hr>
-								<h3>Merge</h3>
-								<label>Merge all your tiles to next</label>
-								<ul class="actions">
-									<li><a href="#app" class="button" onclick="return merge();">Merge</a></li>
-								</ul>
-
-								<hr>
-								<h3>Claim</h3>
-								<label>Burn your Tile-2048 to claim 2048 token</label>
-								<ul class="actions">
-									<li><a href="#app" class="button" onclick="return claim();">Claim</a></li>
-								</ul>
-							</article>
 
 					</div>
 

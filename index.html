@@ -25,7 +25,7 @@
 				console.log(window.ethereum.chainId);
 				chainId = window.ethereum.chainId;
 			}
-			if (chainId != "0x89" && chainId != "0xa" && chainId != "0x1" && chainId != "0x38" && chainId != "0xfa") {
+			if (chainId != "0x89" && chainId != "0xa" && chainId != "0x1" && chainId != "0x38" && chainId != "0xfa" && chainId != "0x64") {
 				chainId = "0x1"
 			}
 
@@ -192,6 +192,21 @@
 								// handle "add" error
 								return;
 							}
+						} else if (chainId == "0x64") {
+							try {
+								await ethereum.request({
+									method: 'wallet_addEthereumChain',
+									params: [{
+										chainId: '0x64',
+										rpcUrls: ['https://rpc.xdaichain.com'],
+										chainName: 'Gnosis Chain',
+										blockExplorerUrls: ['https://blockscout.com/xdai/mainnet']
+									}],
+								});
+							} catch (addError) {
+								// handle "add" error
+								return;
+							}
 						}
 
 					}
@@ -248,6 +263,7 @@
 							<option value="0xa">Optimism</option>
 							<option value="0x38">Binance Smart Chain</option>
 							<option value="0xfa">Fantom Opera</option>
+							<option value="0x64">Gnosis Chain</option>
 						</select>
 					</div>
 					<br />
